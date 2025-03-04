@@ -12,6 +12,14 @@ Revisão de forma mais profunda sobre React
         * [Como o JSX Funciona por Baixo dos Panos?](/notes/fundamentos.md#como-o-jsx-funciona-por-baixo-dos-panos)
         * [Características do JSX](/notes/fundamentos.md#características-do-jsx)
     * [Componentes funcionais e class componentes](/notes/fundamentos.md#componentes-funcionais-e-class-componentes)
+* [Gerenciamento de Estados](/notes/gerenciamento-state.md#gerenciamento-de-estado)
+    * [O que é Estado no React?](/notes/gerenciamento-state.md#o-que-é-estado-no-react)
+    * [Gerenciamento de Estado Local](/notes/gerenciamento-state.md#gerenciamento-de-estado-local)
+    * [Entendendo useState, useEffect e o Ciclo de Vida no React](/notes/gerenciamento-state.md#entendendo-usestate-useeffect-e-o-ciclo-de-vida-no-react)
+        * [1. ``useState``: Gerenciamento de Estado](/notes/gerenciamento-state.md#1-usestate-gerenciamento-de-estado)
+        * [2. ``useEffect``: Lidando com Efeitos Colaterais](/notes/gerenciamento-state.md#2-useeffect-lidando-com-efeitos-colaterais)
+        * [Conclusão](/notes/gerenciamento-state.md#conclusão)
+    * [Ciclo de Vida](/notes/gerenciamento-state.md#ciclo-de-vida)
 * [Referências](#referências)
 
 ## Introdução
@@ -24,3 +32,4 @@ Uma das principais características do React é o Virtual DOM, que otimiza a atu
 
 * [Chat GPT](https://chatgpt.com/)
 * [Treina Web](https://www.treinaweb.com.br/blog/o-que-e-jsx)
+* [React.Dev](https://pt-br.react.dev/learn/managing-state)

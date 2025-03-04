@@ -4,6 +4,7 @@ import viteLogo from '/vite.svg'
 import './App.css'
 import { ApenasUmTest } from './components/apenas-test'
 import { ComponentClass } from './components/component-class'
+import Relogio from './components/clock'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -11,6 +12,7 @@ function App() {
   return (
     <>
       <div>
+        <Relogio />
         <ApenasUmTest />
         <ComponentClass title="Apenas um testes" />
         <a href="https://vite.dev" target="_blank">
