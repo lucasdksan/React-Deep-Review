@@ -5,13 +5,17 @@ import './App.css'
 import { ApenasUmTest } from './components/apenas-test'
 import { ComponentClass } from './components/component-class'
 import Relogio from './components/clock'
+import { ReducerCount } from './components/reducer-count'
+import { ThemeProvider } from './contexts/theme-context'
+import { ContextBTN } from './components/context-btn'
 
 function App() {
   const [count, setCount] = useState(0)
 
   return (
-    <>
+    <ThemeProvider>
       <div>
+        <ReducerCount />
         <Relogio />
         <ApenasUmTest />
         <ComponentClass title="Apenas um testes" />
@@ -34,7 +38,8 @@ function App() {
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
       </p>
-    </>
+      <ContextBTN />
+    </ThemeProvider>
   )
 }
 

@@ -258,3 +258,285 @@ function MeuComponente() {
 | Montagem | componentDidMount | useEffect(() => {...}, []) |
 | Atualização | componentDidUpdate | useEffect(() => {...}, [dependencias]) |
 | Desmontagem | componentWillUnmount | useEffect(() => { return () => {...} }, []) |
+
+### useReducer para estados mais complexos
+
+Quando trabalhamos com estados mais complexos no React, que envolvem múltiplos valores ou transições de estado mais elaboradas, o useState pode se tornar limitado e difícil de gerenciar.
+
+Nesses casos, useReducer oferece uma alternativa mais escalável e previsível, semelhante ao padrão Redux, mas integrado ao React de forma nativa.
+
+#### O que é useReducer?
+
+O useReducer é um hook que ajuda no gerenciamento de estados complexos. Ele funciona baseado em um estado inicial, uma função reducer e ações (dispatch) que determinam como o estado deve ser atualizado.
+
+```tsx
+const [state, dispatch] = useReducer(reducer, initialState);
+```
+
+**Principais Elementos:**
+
+* state → Representa o estado atual.
+* dispatch(action) → Uma função que envia ações para modificar o estado.
+* reducer(state, action) → Uma função que recebe o estado atual e uma ação, retornando um novo estado.
+* initialState → O estado inicial do componente.
+
+#### Exemplo Simples: Contador com useReducer
+
+Aqui está um contador implementado com useReducer:
+
+```tsx
+import { useReducer } from "react";
+
+// Estado inicial
+const initialState = { count: 0 };
+
+// Função reducer
+function reducer(state, action) {
+  switch (action.type) {
+    case "increment":
+      return { count: state.count + 1 };
+    case "decrement":
+      return { count: state.count - 1 };
+    case "reset":
+      return { count: 0 };
+    default:
+      throw new Error("Ação desconhecida");
+  }
+}
+
+export default function Contador() {
+  const [state, dispatch] = useReducer(reducer, initialState);
+
+  return (
+    <div>
+      <h1>Contador: {state.count}</h1>
+      <button onClick={() => dispatch({ type: "increment" })}>➕ Incrementar</button>
+      <button onClick={() => dispatch({ type: "decrement" })}>➖ Decrementar</button>
+      <button onClick={() => dispatch({ type: "reset" })}>🔄 Resetar</button>
+    </div>
+  );
+}
+```
+
+**O que acontece aqui?**
+
+* Criamos um reducer que lida com ações (increment, decrement, reset).
+* O estado inicial é { count: 0 }.
+* O dispatch({ type: "increment" }) chama a ação e modifica o estado de acordo com o reducer.
+
+#### Quando Usar useReducer em Vez de useState?
+
+| Situação | Melhor opção |
+| -------- | ------------ |
+| Estado simples (1 ou 2 variáveis) | useState ✅ |
+| Estado depende do estado anterior | useReducer ✅ |
+| Muitas ações diferentes modificam o estado | useReducer ✅ |
+| Estado complexo com múltiplos valores | useReducer ✅ |
+
+#### Gerenciando Estado Complexo
+
+Agora, vamos gerenciar um formulário usando useReducer. Suponha que temos um formulário de cadastro de usuário:
+
+```tsx
+import { useReducer } from "react";
+
+// Estado inicial
+const initialState = {
+  nome: "",
+  email: "",
+  idade: "",
+};
+
+// Função reducer
+function reducer(state, action) {
+  switch (action.type) {
+    case "setNome":
+      return { ...state, nome: action.payload };
+    case "setEmail":
+      return { ...state, email: action.payload };
+    case "setIdade":
+      return { ...state, idade: action.payload };
+    case "reset":
+      return initialState;
+    default:
+      return state;
+  }
+}
+
+export default function Formulario() {
+  const [state, dispatch] = useReducer(reducer, initialState);
+
+  return (
+    <div>
+      <h1>Cadastro</h1>
+      <input
+        type="text"
+        placeholder="Nome"
+        value={state.nome}
+        onChange={(e) => dispatch({ type: "setNome", payload: e.target.value })}
+      />
+      <input
+        type="email"
+        placeholder="Email"
+        value={state.email}
+        onChange={(e) => dispatch({ type: "setEmail", payload: e.target.value })}
+      />
+      <input
+        type="number"
+        placeholder="Idade"
+        value={state.idade}
+        onChange={(e) => dispatch({ type: "setIdade", payload: e.target.value })}
+      />
+      <button onClick={() => dispatch({ type: "reset" })}>🔄 Resetar</button>
+
+      <p>📌 Nome: {state.nome}</p>
+      <p>📌 Email: {state.email}</p>
+      <p>📌 Idade: {state.idade}</p>
+    </div>
+  );
+}
+```
+
+**Explicação**
+
+* initialState mantém os campos do formulário.
+* reducer gerencia as mudanças com base em ações específicas (setNome, setEmail, etc.).
+* O dispatch é usado para atualizar cada campo individualmente.
+
+> Benefício: O código fica mais organizado e escalável à medida que novos campos são adicionados.
+
+#### Exemplo Prático: Carrinho de Compras
+
+Agora vamos aplicar useReducer para gerenciar um carrinho de compras.
+
+**Criando o reducer**
+
+```tsx
+type Produto = {
+  id: number;
+  nome: string;
+  preco: number;
+};
+
+type CarrinhoState = {
+  produtos: Produto[];
+};
+
+type CarrinhoAction =
+  | { type: "ADD"; produto: Produto }
+  | { type: "REMOVE"; id: number }
+  | { type: "CLEAR" };
+
+const carrinhoReducer = (state: CarrinhoState, action: CarrinhoAction): CarrinhoState => {
+  switch (action.type) {
+    case "ADD":
+      return { produtos: [...state.produtos, action.produto] };
+    case "REMOVE":
+      return { produtos: state.produtos.filter((p) => p.id !== action.id) };
+    case "CLEAR":
+      return { produtos: [] };
+    default:
+      return state;
+  }
+};
+```
+
+**Criando o Componente**
+
+```tsx
+import { useReducer } from "react";
+
+const initialState = { produtos: [] };
+
+export default function Carrinho() {
+  const [state, dispatch] = useReducer(carrinhoReducer, initialState);
+
+  const adicionarProduto = () => {
+    const novoProduto = { id: Date.now(), nome: "Produto X", preco: 50 };
+    dispatch({ type: "ADD", produto: novoProduto });
+  };
+
+  return (
+    <div>
+      <h1>🛒 Carrinho</h1>
+      <button onClick={adicionarProduto}>Adicionar Produto</button>
+      <button onClick={() => dispatch({ type: "CLEAR" })}>🗑 Limpar Carrinho</button>
+      <ul>
+        {state.produtos.map((p) => (
+          <li key={p.id}>
+            {p.nome} - R$ {p.preco}{" "}
+            <button onClick={() => dispatch({ type: "REMOVE", id: p.id })}>❌</button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+```
+
+### Context API (useContext)
+
+O Context API do React é uma ferramenta poderosa para compartilhar estado global entre componentes sem precisar passar props manualmente (prop drilling). Ele permite fornecer (Provider) e consumir (Consumer) valores em diferentes partes da árvore de componentes.
+
+#### Como o Context API Funciona?
+
+1. Criamos um contexto com createContext().
+2. Definimos um Provider para disponibilizar o estado global.
+3. Usamos useContext() para acessar os valores do contexto em qualquer componente.
+
+#### Exemplo Simples: Tema Claro/Escuro
+
+* **Criando o Contexto de Tema**
+
+```tsx
+import { createContext, useState, useContext } from "react";
+
+// Criamos o contexto do tema
+const ThemeContext = createContext(null);
+
+export function ThemeProvider({ children }) {
+  const [tema, setTema] = useState("light");
+
+  const alternarTema = () => {
+    setTema((prev) => (prev === "light" ? "dark" : "light"));
+  };
+
+  return (
+    <ThemeContext.Provider value={{ tema, alternarTema }}>
+      {children}
+    </ThemeContext.Provider>
+  );
+}
+
+// Criamos um hook para facilitar o uso do contexto
+export function useTheme() {
+  return useContext(ThemeContext);
+}
+```
+
+* **Criando um Componente que Usa o Tema**
+
+```tsx
+function BotaoTrocarTema() {
+  const { tema, alternarTema } = useTheme();
+
+  return (
+    <button onClick={alternarTema} style={{ background: tema === "dark" ? "#333" : "#fff", color: tema === "dark" ? "#fff" : "#000" }}>
+      Alternar para {tema === "light" ? "Escuro" : "Claro"}
+    </button>
+  );
+}
+```
+
+* **Aplicando no App Principal**
+
+```tsx
+export default function App() {
+  return (
+    <ThemeProvider>
+      <BotaoTrocarTema />
+    </ThemeProvider>
+  );
+}
+```
+
