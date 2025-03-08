@@ -8,6 +8,8 @@ import Relogio from './components/clock'
 import { ReducerCount } from './components/reducer-count'
 import { ThemeProvider } from './contexts/theme-context'
 import { ContextBTN } from './components/context-btn'
+import { Counter } from './components/counter'
+import { UserList } from './components/user-list'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -15,6 +17,8 @@ function App() {
   return (
     <ThemeProvider>
       <div>
+        <UserList />
+        <Counter />
         <ReducerCount />
         <Relogio />
         <ApenasUmTest />

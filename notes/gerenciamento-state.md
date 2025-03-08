@@ -540,3 +540,237 @@ export default function App() {
 }
 ```
 
+### Gerenciamento global de estado com redux (RTK)
+
+O Redux Toolkit (RTK) é a maneira recomendada e otimizada de usar Redux no React. Ele simplifica a configuração e a escrita de reducers, eliminando a verbosidade do Redux clássico.
+
+#### Por que usar Redux Toolkit?
+
+* ✅ Menos código e menos complexidade
+* ✅ Imutabilidade simplificada com Immer
+* ✅ Inclui createSlice para reduzir a verbosidade
+* ✅ Performance otimizada
+* ✅ Inclui createAsyncThunk para chamadas assíncronas
+* ✅ Melhor integração com TypeScript
+
+#### 1 Criando um Slice (Gerenciamento de Estado Simplificado)
+
+O createSlice combina actions e reducers em um único arquivo.
+
+```tsx
+// store/slices/counterSlice.ts
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+
+interface CounterState {
+  value: number;
+}
+
+const initialState: CounterState = { value: 0 };
+
+const counterSlice = createSlice({
+  name: "counter",
+  initialState,
+  reducers: {
+    increment: (state) => {
+      state.value += 1; // Immer cuida da imutabilidade
+    },
+    decrement: (state) => {
+      state.value -= 1;
+    },
+    incrementByAmount: (state, action: PayloadAction<number>) => {
+      state.value += action.payload;
+    },
+  },
+});
+
+export const { increment, decrement, incrementByAmount } = counterSlice.actions;
+export default counterSlice.reducer;
+```
+
+#### 2 Configurando a Store do Redux
+
+A Store centraliza o estado da aplicação.
+
+```tsx
+// store/index.ts
+import { configureStore } from "@reduxjs/toolkit";
+import counterReducer from "./slices/counterSlice";
+
+export const store = configureStore({
+  reducer: {
+    counter: counterReducer,
+  },
+});
+
+// Tipagem para uso do Redux com TypeScript
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
+```
+
+#### 3 Configurando o Redux no React
+
+Agora, usamos o Provider para envolver nossa aplicação.
+
+```tsx
+// main.tsx (React com Redux)
+import React from "react";
+import ReactDOM from "react-dom";
+import { Provider } from "react-redux";
+import { store } from "./store";
+import App from "./App";
+
+ReactDOM.createRoot(document.getElementById("root")!).render(
+  <Provider store={store}>
+    <App />
+  </Provider>
+);
+```
+
+#### 4 Usando Redux dentro de Componentes
+
+Agora, podemos acessar o estado global dentro de um componente usando useSelector e useDispatch.
+
+```tsx
+// Counter.tsx
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "./store";
+import { increment, decrement, incrementByAmount } from "./store/slices/counterSlice";
+
+export function Counter() {
+  const count = useSelector((state: RootState) => state.counter.value);
+  const dispatch = useDispatch();
+
+  return (
+    <div>
+      <h1>Contador: {count}</h1>
+      <button onClick={() => dispatch(increment())}>+</button>
+      <button onClick={() => dispatch(decrement())}>-</button>
+      <button onClick={() => dispatch(incrementByAmount(5))}>+5</button>
+    </div>
+  );
+}
+```
+
+#### Gerenciamento de Estados Assíncronos com createAsyncThunk
+
+O Redux Toolkit também facilita chamadas assíncronas, como requisições para APIs.
+
+##### 1 Criando um Slice com createAsyncThunk
+
+```tsx
+// store/slices/userSlice.ts
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
+
+interface UserState {
+  users: any[];
+  loading: boolean;
+  error: string | null;
+}
+
+// Estado inicial
+const initialState: UserState = {
+  users: [],
+  loading: false,
+  error: null,
+};
+
+// Thunk para buscar usuários
+export const fetchUsers = createAsyncThunk("users/fetchUsers", async () => {
+  const response = await axios.get("https://jsonplaceholder.typicode.com/users");
+  return response.data;
+});
+
+// Criando Slice
+const userSlice = createSlice({
+  name: "users",
+  initialState,
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchUsers.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchUsers.fulfilled, (state, action) => {
+        state.loading = false;
+        state.users = action.payload;
+      })
+      .addCase(fetchUsers.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || "Erro ao buscar usuários";
+      });
+  },
+});
+
+export default userSlice.reducer;
+```
+
+##### 2 Adicionando o Novo Slice na Store
+
+```tsx
+// store/index.ts
+import { configureStore } from "@reduxjs/toolkit";
+import counterReducer from "./slices/counterSlice";
+import userReducer from "./slices/userSlice";
+
+export const store = configureStore({
+  reducer: {
+    counter: counterReducer,
+    users: userReducer,
+  },
+});
+```
+
+##### 3 Consumindo Dados Assíncronos no Componente
+
+```tsx
+import { useSelector, useDispatch } from "react-redux";
+import type { RootState, AppDispatch } from "./store";
+import { fetchUsers } from "./store/slices/userSlice";
+import { useEffect } from "react";
+
+export function UserList() {
+  // ✅ Correto: Tipar o Dispatch como AppDispatch
+  const dispatch = useDispatch<AppDispatch>();
+  const { users, loading, error } = useSelector((state: RootState) => state.users);
+
+  useEffect(() => {
+    dispatch(fetchUsers()); // Agora TypeScript reconhece
+  }, [dispatch]);
+
+  return (
+    <div>
+      <h1>Lista de Usuários</h1>
+      {loading && <p>Carregando...</p>}
+      {error && <p>Erro: {error}</p>}
+      <ul>
+        {users.map((user) => (
+          <li key={user.id}>{user.name}</li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+```
+
+#### Redux Toolkit vs. Context API
+
+| Feature | Redux Tookit | Context API |
+| ------- | ------------ | ----------- |
+| Complexidade | Média | Baixa |
+| Performace | Melhor (otimizado) | Pode ser menos eficiente |
+| Escalabilidade | Alta | Média |
+| Suporte Assíncrono | Sim (createAsyncThunk) | Não nativo |
+
+* Use Redux Toolkit quando:
+  * ✅ A aplicação tem muitos estados globais complexos
+  * ✅ O estado precisa ser atualizado de forma eficiente
+  * ✅ Requisições assíncronas precisam ser bem gerenciadas
+
+* Use Context API quando:
+  * ✅ Apenas alguns estados precisam ser compartilhados
+  * ✅ A aplicação é pequena ou média
+  * ✅ Você quer simplicidade sem precisar de Redux
+
+### React Query (Para cache de dados e revalidação automático)
