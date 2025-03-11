@@ -777,6 +777,25 @@ export function UserList() {
 
 O React Query é uma biblioteca poderosa para o gerenciamento de dados assíncronos no React. Ele melhora o desempenho, a experiência do usuário e a organização do código ao lidar com requisições HTTP, cache de dados e revalidação automática. Com ele, você substitui o uso excessivo de useState, useEffect e Redux para estados remotos.
 
+**Motivação**
+
+A maioria dos frameworks web principais não vem com uma maneira opinativa de buscar ou atualizar dados de forma holística. Por causa disso, os desenvolvedores acabam construindo meta-frameworks que encapsulam opiniões estritas sobre busca de dados, ou inventam suas próprias maneiras de buscar dados. Isso geralmente significa juntar estados e efeitos colaterais baseados em componentes, ou usar bibliotecas de gerenciamento de estado de propósito mais geral para armazenar e fornecer dados assíncronos em seus aplicativos.
+
+Embora a maioria das bibliotecas tradicionais de gerenciamento de estado sejam ótimas para trabalhar com estado do cliente, elas não são tão boas para trabalhar com estado assíncrono ou de servidor . Isso ocorre porque o estado do servidor é totalmente diferente . Para começar, estado do servidor:
+
+* É persistido remotamente em um local que você não pode controlar ou possuir
+* Requer APIs assíncronas para busca e atualização
+* Implica propriedade compartilhada e pode ser alterado por outras pessoas sem seu conhecimento
+* Pode potencialmente ficar "desatualizado" em seus aplicativos se você não tomar cuidado
+
+Em uma nota mais técnica, o React Query provavelmente irá:
+
+Ajuda você a remover muitas linhas de código complicado e mal compreendido do seu aplicativo e substituí-las por apenas algumas linhas de lógica de consulta do React.
+Torne seu aplicativo mais sustentável e mais fácil de criar novos recursos sem se preocupar em conectar novas fontes de dados de estado do servidor
+Tenha um impacto direto em seus usuários finais, tornando seu aplicativo mais rápido e responsivo do que nunca.
+Pode ajudar você a economizar largura de banda e aumentar o desempenho da memória
+
+
 #### Principais Recursos
 
 * ✅ Cache automático de dados

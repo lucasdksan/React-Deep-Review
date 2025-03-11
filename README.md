@@ -46,6 +46,13 @@ Revisão de forma mais profunda sobre React
             * [3 Consumindo Dados Assíncronos no Componente](/notes/gerenciamento-state.md#3-consumindo-dados-assíncronos-no-componente)
         * [Redux Toolkit vs. Context API](/notes/gerenciamento-state.md#redux-toolkit-vs-context-api)
     * [React Query (Para cache de dados e revalidação automático)](/notes/gerenciamento-state.md#react-query-para-cache-de-dados-e-revalidação-automático)
+        * [Principais Recursos](/notes/gerenciamento-state.md#principais-recursos)
+        * [Configurando o QueryClientProvider](/notes/gerenciamento-state.md#configurando-o-queryclientprovider)
+        * [useQuery: Buscando Dados e Cache Automático](/notes/gerenciamento-state.md#usequery-buscando-dados-e-cache-automático)
+        * [Revalidação Automática (Refetching)](/notes/gerenciamento-state.md#revalidação-automática-refetching)
+        * [useMutation: Enviando Dados para a API](/notes/gerenciamento-state.md#usemutation-enviando-dados-para-a-api)
+        * [Comparação: React Query vs useEffect + useState](/notes/gerenciamento-state.md#comparação-react-query-vs-useeffect--usestate)
+        * [Quando Usar React Query?](/notes/gerenciamento-state.md#quando-usar-react-query)
 * [Referências](#referências)
 
 ## Introdução
@@ -59,3 +66,4 @@ Uma das principais características do React é o Virtual DOM, que otimiza a atu
 * [Chat GPT](https://chatgpt.com/)
 * [Treina Web](https://www.treinaweb.com.br/blog/o-que-e-jsx)
 * [React.Dev](https://pt-br.react.dev/learn/managing-state)
+* [Tanstack](https://tanstack.com/query/latest/docs/framework/react/overview)
