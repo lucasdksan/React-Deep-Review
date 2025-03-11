@@ -10,6 +10,7 @@ import { ThemeProvider } from './contexts/theme-context'
 import { ContextBTN } from './components/context-btn'
 import { Counter } from './components/counter'
 import { UserList } from './components/user-list'
+import { UserListReactQuery } from './components/user-list-react-query'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -21,6 +22,7 @@ function App() {
         <Counter />
         <ReducerCount />
         <Relogio />
+        <UserListReactQuery />
         <ApenasUmTest />
         <ComponentClass title="Apenas um testes" />
         <a href="https://vite.dev" target="_blank">

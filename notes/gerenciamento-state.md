@@ -774,3 +774,187 @@ export function UserList() {
   * ✅ Você quer simplicidade sem precisar de Redux
 
 ### React Query (Para cache de dados e revalidação automático)
+
+O React Query é uma biblioteca poderosa para o gerenciamento de dados assíncronos no React. Ele melhora o desempenho, a experiência do usuário e a organização do código ao lidar com requisições HTTP, cache de dados e revalidação automática. Com ele, você substitui o uso excessivo de useState, useEffect e Redux para estados remotos.
+
+#### Principais Recursos
+
+* ✅ Cache automático de dados
+* ✅ Revalidação e sincronização automática
+* ✅ Suporte a pagination e infinite queries
+* ✅ Gerenciamento de loading, error, refetching sem necessidade de useState
+* ✅ Suporte a mutations (operações POST, PUT, DELETE)
+* ✅ Fácil integração com GraphQL e REST APIs
+* ✅ Compatível com SSR (Next.js, Remix)
+
+#### Configurando o QueryClientProvider
+
+Antes de usar o React Query, precisamos envolver a aplicação com o QueryClientProvider:
+
+```tsx
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+
+const queryClient = new QueryClient();
+
+export function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <MyComponent />
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
+  );
+}
+```
+
+#### useQuery: Buscando Dados e Cache Automático
+
+O useQuery permite fazer fetching automático de dados e armazená-los no cache.
+
+```tsx
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+
+async function fetchUsers() {
+  const { data } = await axios.get("https://jsonplaceholder.typicode.com/users");
+  return data;
+}
+
+export function UserList() {
+  const { data: users, isLoading, error, refetch } = useQuery({
+    queryKey: ["users"],
+    queryFn: fetchUsers,
+    staleTime: 1000 * 60 * 5, // Dados são considerados frescos por 5 minutos
+  });
+
+  if (isLoading) return <p>Carregando...</p>;
+  if (error) return <p>Erro ao buscar dados</p>;
+
+  return (
+    <div>
+      <h1>Lista de Usuários</h1>
+      <button onClick={() => refetch()}>Recarregar</button>
+      <ul>
+        {users.map((user) => (
+          <li key={user.id}>{user.name}</li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+```
+
+**Explicação**
+
+* O useQuery armazena os dados no cache e evita chamadas desnecessárias à API.
+* queryKey: ["users"] identifica os dados no cache.
+* staleTime: 5 minutos define que os dados não serão revalidados nesse período.
+* O botão Recarregar força um refetch() manual.
+
+#### Revalidação Automática (Refetching)
+
+O React Query oferece revalidação automática:
+
+* staleTime: Define por quanto tempo os dados são considerados frescos.
+* refetchInterval: Revalida automaticamente em um intervalo de tempo.
+* Revalidação ao foco: Quando o usuário volta para a aba, os dados são atualizados.
+
+```tsx
+  useQuery({
+    queryKey: ["users"],
+    queryFn: fetchUsers,
+    staleTime: 1000 * 60 * 5, // 5 minutos
+    refetchOnWindowFocus: true, // Revalida ao alternar abas
+    refetchInterval: 10000, // Revalida a cada 10s
+  });
+```
+
+#### useMutation: Enviando Dados para a API
+
+Para POST, PUT, DELETE, usamos useMutation:
+
+```tsx
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import axios from "axios";
+
+async function createUser(name: string) {
+  return axios.post("https://jsonplaceholder.typicode.com/users", { name });
+}
+
+export function AddUser() {
+  const queryClient = useQueryClient();
+  const mutation = useMutation({
+    mutationFn: createUser,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["users"] }); // Atualiza cache
+    },
+  });
+
+  return (
+    <button onClick={() => mutation.mutate("Novo Usuário")}>
+      {mutation.isPending ? "Salvando..." : "Adicionar Usuário"}
+    </button>
+  );
+}
+```
+
+**Explicação**
+
+* useMutation executa POST ao clicar no botão.
+* onSuccess invalida ["users"] para forçar atualização dos dados no cache.
+
+#### Comparação: React Query vs useEffect + useState
+
+**❌ Sem React Query (código mais verboso)**
+
+```tsx
+const [users, setUsers] = useState([]);
+const [loading, setLoading] = useState(true);
+const [error, setError] = useState(null);
+
+useEffect(() => {
+  async function fetchUsers() {
+    try {
+      const response = await fetch("https://jsonplaceholder.typicode.com/users");
+      const data = await response.json();
+      setUsers(data);
+    } catch (err) {
+      setError(err);
+    } finally {
+      setLoading(false);
+    }
+  }
+  fetchUsers();
+}, []);
+```
+
+**✅ Com React Query (código mais limpo)**
+
+```tsx
+const { data: users, isLoading, error } = useQuery({
+  queryKey: ["users"],
+  queryFn: fetchUsers,
+});
+```
+
+**Vantagens:**
+
+* Menos código boilerplate
+* Cache automático
+* Revalidação automática
+* Melhor desempenho
+
+#### Quando Usar React Query?
+
+**✅ Casos indicados:**
+
+* ✔ Dados que precisam de cache e sincronização
+* ✔ Requisições frequentes (ex.: lista de produtos, usuários)
+* ✔ Suporte a paginação e rolagem infinita
+* ✔ Melhor experiência em SPAs e Next.js
+
+**❌ Quando NÃO usar?**
+
+* ✖ Estados locais (ex.: formulário controlado)
+* ✖ Dados que não precisam de sincronização constante
+
