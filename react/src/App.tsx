@@ -11,6 +11,7 @@ import { ContextBTN } from './components/context-btn'
 import { Counter } from './components/counter'
 import { UserList } from './components/user-list'
 import { UserListReactQuery } from './components/user-list-react-query'
+import CompressPDF from './components/convert-pdf'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -18,6 +19,7 @@ function App() {
   return (
     <ThemeProvider>
       <div>
+        <CompressPDF />
         <UserList />
         <Counter />
         <ReducerCount />

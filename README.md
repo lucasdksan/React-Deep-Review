@@ -53,6 +53,17 @@ Revisão de forma mais profunda sobre React
         * [useMutation: Enviando Dados para a API](/notes/gerenciamento-state.md#usemutation-enviando-dados-para-a-api)
         * [Comparação: React Query vs useEffect + useState](/notes/gerenciamento-state.md#comparação-react-query-vs-useeffect--usestate)
         * [Quando Usar React Query?](/notes/gerenciamento-state.md#quando-usar-react-query)
+* [Manipulação de Dados e API´s](/notes/apis.md#manipulação-de-dados-e-apis)
+    * [Métodos HTTP e Manipulação de Dados](/notes/apis.md#métodos-http-e-manipulação-de-dados)
+    * [Consumo de API com Fetch API (Nativo do JavaScript)](/notes/apis.md#consumo-de-api-com-fetch-api-nativo-do-javascript)
+    * [Consumo de API com Axios (Mais robusto)](/notes/apis.md#consumo-de-api-com-axios-mais-robusto)
+    * [Otimizando com React Query](/notes/apis.md#otimizando-com-react-query)
+    * [useEffect para Chamadas Assíncronas no React](/notes/apis.md#useeffect-para-chamadas-assíncronas-no-react)
+        * [Revisão do useEffect](/notes/apis.md#revisão-do-useeffect)
+        * [Chamadas Assíncronas no useEffect (Maneira Correta)](/notes/apis.md#chamadas-assíncronas-no-useeffect-maneira-correta)
+        * [Evitando Vazamentos de Memória](/notes/apis.md#evitando-vazamentos-de-memória)
+        * [Chamadas Assíncronas com Dependências](/notes/apis.md#chamadas-assíncronas-com-dependências)
+        * [Evitando Problemas no React 18 (Strict Mode e Renderizações Duplicadas)](/notes/apis.md#evitando-problemas-no-react-18-strict-mode-e-renderizações-duplicadas)
 * [Referências](#referências)
 
 ## Introdução
@@ -64,6 +75,6 @@ Uma das principais características do React é o Virtual DOM, que otimiza a atu
 ## Referências
 
 * [Chat GPT](https://chatgpt.com/)
-* [Treina Web](https://www.treinaweb.com.br/blog/o-que-e-jsx)
 * [React.Dev](https://pt-br.react.dev/learn/managing-state)
+* [Treina Web](https://www.treinaweb.com.br/blog/o-que-e-jsx)
 * [Tanstack](https://tanstack.com/query/latest/docs/framework/react/overview)
