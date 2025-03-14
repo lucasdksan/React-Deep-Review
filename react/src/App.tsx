@@ -12,6 +12,11 @@ import { Counter } from './components/counter'
 import { UserList } from './components/user-list'
 import { UserListReactQuery } from './components/user-list-react-query'
 import CompressPDF from './components/convert-pdf'
+import { UsersListSingle } from './components/users-list-single'
+import { UsersListAxios } from './components/users-list-axios'
+import { UsersListNew } from './components/users-list-new'
+import { UsersListAbort } from './components/users-list-abort'
+import { UsersListDouble } from './components/users-list-double'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -19,13 +24,18 @@ function App() {
   return (
     <ThemeProvider>
       <div>
+        <UsersListSingle />
         <CompressPDF />
+        <UsersListAxios />
         <UserList />
         <Counter />
+        <UsersListNew />
         <ReducerCount />
         <Relogio />
+        <UsersListAbort />
         <UserListReactQuery />
         <ApenasUmTest />
+        <UsersListDouble />
         <ComponentClass title="Apenas um testes" />
         <a href="https://vite.dev" target="_blank">
           <img src={viteLogo} className="logo" alt="Vite logo" />
