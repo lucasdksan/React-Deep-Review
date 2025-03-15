@@ -64,6 +64,13 @@ Revisão de forma mais profunda sobre React
         * [Evitando Vazamentos de Memória](/notes/apis.md#evitando-vazamentos-de-memória)
         * [Chamadas Assíncronas com Dependências](/notes/apis.md#chamadas-assíncronas-com-dependências)
         * [Evitando Problemas no React 18 (Strict Mode e Renderizações Duplicadas)](/notes/apis.md#evitando-problemas-no-react-18-strict-mode-e-renderizações-duplicadas)
+    * [Cache e SWR no React](/notes/apis.md#cache-e-swr-no-react)
+        * [O que é Cache e por que ele é importante?](/notes/apis.md#o-que-é-cache-e-por-que-ele-é-importante)
+        * [SWR - Stale While Revalidate](/notes/apis.md#swr---stale-while-revalidate)
+        * [Como Usar SWR no React?](/notes/apis.md#como-usar-swr-no-react)
+        * [Revalidação Automática](/notes/apis.md#revalidação-automática)
+        * [Controle Avançado de Cache](/notes/apis.md#controle-avançado-de-cache)
+        * [SWR vs React Query - Quando Usar Cada Um?](/notes/apis.md#swr-vs-react-query---quando-usar-cada-um)
 * [Referências](#referências)
 
 ## Introdução

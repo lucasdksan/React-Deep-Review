@@ -17,6 +17,7 @@ import { UsersListAxios } from './components/users-list-axios'
 import { UsersListNew } from './components/users-list-new'
 import { UsersListAbort } from './components/users-list-abort'
 import { UsersListDouble } from './components/users-list-double'
+import { UsersListSWR } from './components/users-list-swr'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -57,6 +58,7 @@ function App() {
         Click on the Vite and React logos to learn more
       </p>
       <ContextBTN />
+      <UsersListSWR />
     </ThemeProvider>
   )
 }

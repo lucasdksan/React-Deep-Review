@@ -412,3 +412,114 @@ O useEffect é essencial para chamadas assíncronas no React, mas exige boas pr�
 * No React 18, evite chamadas duplicadas com useRef.
 
 ⚡ Quer que eu aprofunde mais algum ponto? 🚀
+
+### Cache e SWR no React
+
+A otimização do cache de dados no React é essencial para melhorar a performance e a experiência do usuário. Ferramentas como SWR (Stale-While-Revalidate) ajudam a tornar o processo eficiente, reduzindo chamadas de API desnecessárias e garantindo que os dados exibidos estejam sempre atualizados.
+
+#### O que é Cache e por que ele é importante?
+
+Cache é um armazenamento temporário de dados que evita requisições repetidas à API, melhorando:
+
+* 🚀 Performance (dados carregam mais rápido).
+* 💾 Menor consumo de rede (evita requisições redundantes).
+* 🎯 Experiência do usuário (dados disponíveis mesmo offline).
+
+No React, o cache pode ser gerenciado manualmente com o useState, mas soluções como SWR fazem isso de forma automática.
+
+#### SWR - Stale While Revalidate
+
+SWR (Stale-While-Revalidate) é uma estratégia de cache que mostra dados armazenados (stale) primeiro e depois busca novos dados na API, garantindo que os dados sempre estejam atualizados sem bloquear a interface.
+
+📌 Principais recursos do SWR:
+
+* ✅ Cache automático de requisições
+* ✅ Revalidação automática ao refocar a aba ou reconectar à internet
+* ✅ Suporte a polling (atualização periódica)
+* ✅ Evita chamadas duplicadas à API
+
+```sh
+npm install swr
+# ou
+yarn add swr
+```
+
+#### Como Usar SWR no React?
+
+```tsx
+import useSWR from 'swr';
+
+const fetcher = (url: string) => fetch(url).then(res => res.json());
+
+export default function UsersList() {
+  const { data, error, isLoading } = useSWR('https://jsonplaceholder.typicode.com/users', fetcher);
+
+  if (isLoading) return <p>Carregando...</p>;
+  if (error) return <p>Erro ao carregar os dados.</p>;
+
+  return (
+    <ul>
+      {data.map((user) => (
+        <li key={user.id}>{user.name}</li>
+      ))}
+    </ul>
+  );
+}
+```
+
+**Como funciona?**
+
+1. O useSWR faz a requisição para a API e armazena a resposta no cache.
+2. Sempre que o componente for renderizado, primeiro exibe os dados em cache.
+3. Em segundo plano, refaz a requisição para obter dados atualizados.
+4. Se a aba for refocada, os dados são atualizados automaticamente.
+
+#### Revalidação Automática
+
+O SWR revalida os dados automaticamente sempre que:
+
+* O usuário voltar para a aba.
+* A conexão de rede for restaurada.
+* O tempo de cache expirar (configurável).
+
+**Exemplo: Revalidar a cada 10 segundos**
+
+```tsx
+const { data, error } = useSWR('https://jsonplaceholder.typicode.com/users', fetcher, {
+  refreshInterval: 10000 // Revalida a cada 10 segundos
+});
+```
+
+#### Controle Avançado de Cache
+
+Podemos pré-popular o cache ou forçar uma revalidação manualmente.
+
+```tsx
+import { mutate } from 'swr';
+
+mutate('https://jsonplaceholder.typicode.com/users', [
+  { id: 1, name: "Usuário Exemplo" }
+], false);
+```
+
+*  Isso adiciona um valor ao cache antes mesmo de chamar a API.
+
+#### SWR vs React Query - Quando Usar Cada Um?
+
+| Característica | SWR | React Query |
+| -------------- | --- | ----------- |
+| 🔄 Revalidação automática | Sim (ao refocar aba, reconectar) | Sim (mais personalizável) |
+| 📦 Cache | Sim | Sim (com mais controle) |
+| 🚀 Fácil de usar | Muito simples | Levemente mais complexo |
+| 🔁 Polling (atualização periódica) | Sim | Sim |
+| 🛠 Mutations (POST, PUT, DELETE) | Suporte básico | Suporte avançado |
+
+**Quando usar SWR?**
+
+* Projetos simples ou leves, onde o foco é fetching de dados.
+* Apps onde não há muitas mutações (POST, PUT, DELETE).
+
+**Quando usar React Query?**
+
+* Projetos complexos, onde há mutações de dados.
+* Aplicações que exigem controle avançado do cache.
