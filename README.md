@@ -71,6 +71,11 @@ Revisão de forma mais profunda sobre React
         * [Revalidação Automática](/notes/apis.md#revalidação-automática)
         * [Controle Avançado de Cache](/notes/apis.md#controle-avançado-de-cache)
         * [SWR vs React Query - Quando Usar Cada Um?](/notes/apis.md#swr-vs-react-query---quando-usar-cada-um)
+    * [Comunicação em Tempo Real no React com WebSockets e SSE](/notes/apis.md#comunicação-em-tempo-real-no-react-com-websockets-e-sse)
+        * [WebSockets - Conexão Bidirecional](/notes/apis.md#websockets---conexão-bidirecional)
+        * [Server-Sent Events (SSE) - Comunicação Unidirecional](/notes/apis.md#server-sent-events-sse---comunicação-unidirecional)
+        * [Comparação entre WebSockets e SSE](/notes/apis.md#comparação-entre-websockets-e-sse)
+        * [Conclusão - Quando Usar Cada Um?](/notes/apis.md#conclusão---quando-usar-cada-um)
 * [Referências](#referências)
 
 ## Introdução

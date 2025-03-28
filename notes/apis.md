@@ -523,3 +523,164 @@ mutate('https://jsonplaceholder.typicode.com/users', [
 
 * Projetos complexos, onde há mutações de dados.
 * Aplicações que exigem controle avançado do cache.
+
+### Comunicação em Tempo Real no React com WebSockets e SSE
+
+A comunicação em tempo real é essencial para aplicações que precisam atualizar informações sem que o usuário precise recarregar a página. Duas abordagens populares para isso são WebSockets e Server-Sent Events (SSE).
+
+#### WebSockets - Conexão Bidirecional
+
+Os WebSockets permitem uma conexão persistente e bidirecional entre o cliente e o servidor. Isso significa que:
+
+* O cliente pode enviar mensagens para o servidor a qualquer momento.
+* O servidor pode enviar mensagens para o cliente sem precisar que ele solicite os dados.
+
+**Quando usar WebSockets?**
+
+* Aplicações de chat.
+* Notificações em tempo real.
+* Streaming de dados (ex: preços de ações, jogos multiplayer).
+* Monitoramento de sistemas.
+
+**Exemplo de WebSockets com React e TypeScript**
+
+```tsx
+import { useEffect, useState } from "react";
+
+const WebSocketComponent = () => {
+  const [messages, setMessages] = useState<string[]>([]);
+  const [ws, setWs] = useState<WebSocket | null>(null);
+
+  useEffect(() => {
+    const socket = new WebSocket("wss://example.com/socket");
+
+    socket.onopen = () => {
+      console.log("Conectado ao WebSocket");
+      setWs(socket);
+    };
+
+    socket.onmessage = (event) => {
+      setMessages((prev) => [...prev, event.data]);
+    };
+
+    socket.onerror = (error) => {
+      console.error("Erro no WebSocket", error);
+    };
+
+    return () => {
+      socket.close();
+    };
+  }, []);
+
+  const sendMessage = () => {
+    if (ws) {
+      ws.send("Olá, servidor!");
+    }
+  };
+
+  return (
+    <div>
+      <h2>Mensagens do WebSocket:</h2>
+      <ul>
+        {messages.map((msg, index) => (
+          <li key={index}>{msg}</li>
+        ))}
+      </ul>
+      <button onClick={sendMessage}>Enviar Mensagem</button>
+    </div>
+  );
+};
+
+export default WebSocketComponent;
+```
+
+**Explicação:**
+
+* Criamos um WebSocket com new WebSocket().
+* Quando a conexão é estabelecida (onopen), armazenamos a referência no estado.
+* Recebemos mensagens do servidor em onmessage.
+* Enviamos mensagens usando ws.send().
+* Fechamos a conexão ao desmontar o componente.
+
+#### Server-Sent Events (SSE) - Comunicação Unidirecional
+
+Os Server-Sent Events (SSE) são uma alternativa aos WebSockets, permitindo que o servidor envie mensagens automaticamente para o cliente, sem necessidade de polling manual.
+
+**Principais características do SSE:**
+* 🔄 Unidirecional: O cliente apenas recebe dados do servidor.
+* ⚡ Mais eficiente que polling: Ideal para notificações e streams de dados contínuos.
+* 🔥 Fácil de usar: Baseado na API EventSource.
+
+**Quando usar SSE?**
+
+* Atualizações em tempo real (ex: placares esportivos, feeds de notícias).
+* Monitoramento de sistemas (logs de servidor, métricas).
+* Notificações do backend para o frontend.
+
+**Exemplo de SSE com React**
+
+```tsx
+import { useEffect, useState } from "react";
+
+const SSEComponent = () => {
+  const [messages, setMessages] = useState<string[]>([]);
+
+  useEffect(() => {
+    const eventSource = new EventSource("https://example.com/sse");
+
+    eventSource.onmessage = (event) => {
+      setMessages((prev) => [...prev, event.data]);
+    };
+
+    eventSource.onerror = () => {
+      console.error("Erro na conexão SSE");
+      eventSource.close();
+    };
+
+    return () => {
+      eventSource.close();
+    };
+  }, []);
+
+  return (
+    <div>
+      <h2>Mensagens SSE:</h2>
+      <ul>
+        {messages.map((msg, index) => (
+          <li key={index}>{msg}</li>
+        ))}
+      </ul>
+    </div>
+  );
+};
+
+export default SSEComponent;
+```
+
+**Explicação:**
+
+* Criamos uma conexão com new EventSource(url).
+* O servidor envia eventos automaticamente para o cliente.
+* Armazenamos e exibimos as mensagens recebidas.
+* Fechamos a conexão quando o componente é desmontado.
+
+#### Comparação entre WebSockets e SSE
+
+| Característica | WebSockets | SSE (Server-Sent Events) |
+| -------------- | ---------- | ------------------------ |
+| 🔄 Comunicação | Bidirecional (envio e recebimento de dados) | Unidirecional (apenas recebimento) |
+| ⚡ Performance | Alto desempenho, ideal para interação constante	| Leve, ótimo para streaming |
+| 🌍 Suporte a navegadores | Todos os navegadores modernos | Funciona na maioria dos navegadores |
+| 🌐 Conexões simultâneas | Suporta várias conexões | Limitado no número de conexões |
+| 🚀 Casos de uso | Chats, multiplayer, notificações | Atualizações contínuas, feeds |
+
+#### Conclusão - Quando Usar Cada Um?
+
+* WebSockets ✅
+  * Quando precisamos de comunicação bidirecional, como chats, jogos online, notificações interativas.
+
+* SSE (Server-Sent Events) ✅
+  * Quando o servidor precisa apenas enviar dados ao cliente, como streams de notícias, atualizações financeiras e logs.
+
+Ambas as tecnologias podem ser combinadas para criar sistemas eficientes de tempo real. 🚀
+Se precisar de mais detalhes ou exemplos, só perguntar!
