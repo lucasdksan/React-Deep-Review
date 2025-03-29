@@ -17,7 +17,9 @@ import { UsersListAxios } from './components/users-list-axios'
 import { UsersListNew } from './components/users-list-new'
 import { UsersListAbort } from './components/users-list-abort'
 import { UsersListDouble } from './components/users-list-double'
-import { UsersListSWR } from './components/users-list-swr'
+import { UsersListSWR } from './components/users-list-swr'  
+import { ParentHigh } from './components/parent-high'
+import { SuspenseComponent } from './components/suspense-component'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -25,6 +27,7 @@ function App() {
   return (
     <ThemeProvider>
       <div>
+        <SuspenseComponent />
         <UsersListSingle />
         <CompressPDF />
         <UsersListAxios />
@@ -59,6 +62,10 @@ function App() {
       </p>
       <ContextBTN />
       <UsersListSWR />
+      {/* <ProductListLow /> */}
+      {/* <ProductListHigh /> */}
+      {/* <ParentLow /> */}
+      <ParentHigh />
     </ThemeProvider>
   )
 }
