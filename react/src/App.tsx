@@ -20,6 +20,9 @@ import { UsersListDouble } from './components/users-list-double'
 import { UsersListSWR } from './components/users-list-swr'  
 import { ParentHigh } from './components/parent-high'
 import { SuspenseComponent } from './components/suspense-component'
+import Pai from './components/pai'
+import { Timer } from './components/timer'
+import CountRefMemo from './components/count-ref-memo'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -27,6 +30,8 @@ function App() {
   return (
     <ThemeProvider>
       <div>
+        <Timer />
+        <CountRefMemo label='asdsa' />
         <SuspenseComponent />
         <UsersListSingle />
         <CompressPDF />
@@ -62,6 +67,7 @@ function App() {
       </p>
       <ContextBTN />
       <UsersListSWR />
+      <Pai />
       {/* <ProductListLow /> */}
       {/* <ProductListHigh /> */}
       {/* <ParentLow /> */}

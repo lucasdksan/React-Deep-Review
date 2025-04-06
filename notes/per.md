@@ -451,3 +451,155 @@ export default App;
 * Funciona bem com React Router, imagens e requisições assíncronas.
 * Combinar Lazy Loading com Code Splitting e SSR resulta em uma aplicação mais otimizada.
 
+### Evitar re-renders com react.memo e useRef
+
+#### O que são re-renderizações desnecessárias?
+
+No React, qualquer mudança de estado ou props em um componente pode forçar sua re-renderização — mesmo que o conteúdo renderizado continue exatamente o mesmo. Isso pode gerar perda de performance, especialmente em componentes grandes ou listas.
+
+#### React.memo – Memorização de Componentes
+
+**O que é?**
+
+React.memo é um HOC (Higher Order Component) que previne re-renderizações se as props não mudarem.
+
+```tsx
+const MeuComponente = React.memo((props) => {
+  console.log('Renderizou!');
+  return <div>{props.valor}</div>;
+});
+```
+
+**Como funciona?**
+
+* O React compara as props anteriores com as novas usando shallow comparison.
+* Se forem iguais, o React pula a renderização do componente.
+
+#### React.memo com comparação customizada
+
+Se as props forem objetos, arrays ou funções, o shallow compare pode falhar. Podemos passar uma função de comparação customizada:
+
+```tsx
+const MeuComp = React.memo(Componente, (prevProps, nextProps) => {
+  return deepEqual(prevProps.obj, nextProps.obj);
+});
+```
+
+**Quando não usar React.memo?**
+
+* Quando o componente sempre recebe props diferentes.
+* Quando a comparação das props é custosa e mais pesada que o re-render.
+* Em componentes pequenos e baratos de renderizar.
+
+#### useRef – Persistência de valores sem re-render
+
+useRef armazena valores mutáveis que não causam re-renderizações ao serem modificados.
+
+```tsx
+const contador = useRef(0);
+```
+
+#### Comparativo useRef vs useState
+
+|  | useStaet | useRef |
+|- | -------- | ------ |
+| Causa re-render | Sim | Não |
+| Persiste entre renders | Sim | Sim |
+| Ideal para | Dados da UI | Referências, timers, etc. |
+
+### Debounce e Throttle para otimizar eventos
+
+Alguns eventos no browser disparam centenas de vezes por segundo. Executar uma função a cada disparo pode:
+
+* Sobrecarregar o processamento (CPU)
+* Causar travamentos na interface
+* Aumentar o consumo de recursos (rede, memória)
+* Prejudicar a experiência do usuário (UX)
+
+#### DEBOUNCE
+
+Debounce adia a execução de uma função até que um tempo de espera tenha passado sem novos eventos.
+
+> Ideal quando queremos reagir somente após o usuário parar de interagir.
+
+Pesquisa em tempo real – só faz a requisição quando o usuário parou de digitar.
+
+```tsx
+import { useEffect, useState } from 'react';
+
+function useDebounce<T>(value: T, delay: number): T {
+  const [debounced, setDebounced] = useState(value);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebounced(value);
+    }, delay);
+
+    return () => clearTimeout(timer); // limpa se o valor mudar antes do tempo
+  }, [value, delay]);
+
+  return debounced;
+}
+
+// Uso em um componente:
+const SearchInput = () => {
+  const [input, setInput] = useState('');
+  const debouncedSearch = useDebounce(input, 500);
+
+  useEffect(() => {
+    if (debouncedSearch) {
+      // chama API
+      console.log('🔍 Buscando:', debouncedSearch);
+    }
+  }, [debouncedSearch]);
+
+  return <input onChange={e => setInput(e.target.value)} />;
+};
+```
+
+#### THROTTLE
+
+Throttle garante que uma função seja chamada no máximo uma vez a cada X milissegundos, mesmo que o evento ocorra várias vezes.
+
+> Ideal para manter uma taxa constante de execução em eventos contínuos (scroll, resize, mouse move).
+
+```tsx
+import { useEffect } from 'react';
+import throttle from 'lodash.throttle';
+
+const ScrollTracker = () => {
+  useEffect(() => {
+    const handleScroll = throttle(() => {
+      console.log('🌀 Scroll detectado:', window.scrollY);
+    }, 500);
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  return <div style={{ height: '3000px' }}>Role a página</div>;
+};
+```
+
+#### Diferenças entre Debounce e Throttle
+
+| Característica | Debounce | Throttle |
+| -------------- | -------- | -------- |
+| Execução |  Após o silêncio do evento |  Periodicamente durante o evento | 
+| Ideal para | Input, pesquisa, resize | Scroll, mousemove, resize contínuo | 
+| Cancelamento fácil | Sim | Mais complexo | 
+
+**Bibliotecas recomendadas**
+
+* lodash.debounce
+* lodash.throttle
+* use-debounce – hook React para debounce
+* ahooks – coleção de hooks com debounce/throttle prontos
+
+> Sempre use useCallback quando for aplicar debounce/throttle em handlers para evitar recriações desnecessárias da função:
+
+```tsx
+const handleResize = useCallback(throttle(() => {
+  console.log('Redimensionado');
+}, 300), []);
+```
