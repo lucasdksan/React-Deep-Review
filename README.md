@@ -109,6 +109,16 @@ Revisão de forma mais profunda sobre React
         * [DEBOUNCE](/notes/per.md#debounce)
         * [THROTTLE](/notes/per.md#throttle)
         * [Diferenças entre Debounce e Throttle](/notes/per.md#diferenças-entre-debounce-e-throttle)
+* [UI/UX e Estilização](/notes/ui.md#uiux-e-estilização)
+    * [Acessibilidade (ARIA, foco em teclado)](/notes/ui.md#acessibilidade-aria-foco-em-teclado)
+        * [O que é acessibilidade (a11y)?](/notes/ui.md#o-que-é-acessibilidade-a11y)
+        * [O que são atributos ARIA?](/notes/ui.md#o-que-são-atributos-aria)
+            * [Exemplos práticos com React](/notes/ui.md#exemplos-práticos-com-react)
+            * [Elemento visual escondido mas acessível (aria-label)](/notes/ui.md#elemento-visual-escondido-mas-acessível-aria-label)
+            * [Campos de formulário com aria-describedby](/notes/ui.md#campos-de-formulário-com-aria-describedby)
+            * [role – Declarando a função do elemento](/notes/ui.md#role--declarando-a-função-do-elemento)
+            * [aria-live – Feedback dinâmico](/notes/ui.md#aria-live--feedback-dinâmico)
+            * [Boas práticas gerais no React](/notes/ui.md#boas-práticas-gerais-no-react)
 * [Referências](#referências)
 
 ## Introdução
