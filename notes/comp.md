@@ -291,3 +291,150 @@ const Dashboard = () => {
 
 export default withAuth(Dashboard);
 ```
+
+### Hooks customizados para lógica reutilizável
+
+Hooks customizados no React são funções que começam com a palavra use e encapsulam lógica reutilizável que pode ser compartilhada entre vários componentes.
+
+> Em resumo: eles permitem extrair lógica que usa outros hooks (useState, useEffect, useReducer, etc.) para deixar seus componentes mais limpos e sua lógica mais DRY (Don't Repeat Yourself).
+
+#### Por que criar Hooks customizados?
+
+* Organização de código: em vez de repetir useState, useEffect e funções em vários lugares, você centraliza tudo.
+* Reutilização de lógica: usar o mesmo comportamento em diferentes componentes.
+* Separação de responsabilidades: deixa seus componentes focados apenas em renderizar UI.
+* Teste mais fácil: facilita testar regras de negócio separadamente dos componentes.
+
+#### Estrutura de um Hook Customizado
+
+Sempre que você cria um hook customizado, ele:
+
+* Começa com use
+* Pode chamar outros hooks React
+* Pode receber parâmetros
+* Retorna dados e/ou funções
+
+Exemplo básico:
+
+```tsx
+import { useState } from 'react';
+
+function useCounter(initialValue = 0) {
+  const [count, setCount] = useState(initialValue);
+
+  const increment = () => setCount((c) => c + 1);
+  const decrement = () => setCount((c) => c - 1);
+  const reset = () => setCount(initialValue);
+
+  return { count, increment, decrement, reset };
+}
+
+
+function CounterComponent() {
+  const { count, increment, decrement, reset } = useCounter(5);
+
+  return (
+    <div>
+      <h1>{count}</h1>
+      <button onClick={increment}>Incrementar</button>
+      <button onClick={decrement}>Decrementar</button>
+      <button onClick={reset}>Resetar</button>
+    </div>
+  );
+}
+```
+
+#### Hook Customizado mais complexo: useFetch
+
+```tsx
+import { useState, useEffect } from 'react';
+
+function useFetch<T>(url: string) {
+  const [data, setData] = useState<T | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<Error | null>(null);
+
+  useEffect(() => {
+    let isMounted = true;
+    setLoading(true);
+
+    fetch(url)
+      .then((res) => res.json())
+      .then((json) => {
+        if (isMounted) {
+          setData(json);
+          setLoading(false);
+        }
+      })
+      .catch((err) => {
+        if (isMounted) {
+          setError(err);
+          setLoading(false);
+        }
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [url]);
+
+  return { data, loading, error };
+}
+
+
+
+function UsersList() {
+  const { data, loading, error } = useFetch<User[]>('/api/users');
+
+  if (loading) return <p>Carregando...</p>;
+  if (error) return <p>Erro: {error.message}</p>;
+
+  return (
+    <ul>
+      {data?.map((user) => (
+        <li key={user.id}>{user.name}</li>
+      ))}
+    </ul>
+  );
+}
+
+```
+
+#### Regras dos Hooks Customizados
+
+* Devem começar com use (importante para o React entender que eles seguem as regras dos hooks).
+* Devem ser chamados no topo de funções (não dentro de if, for, while).
+* Podem chamar outros hooks (useState, useEffect, useMemo, etc.).
+* Podem receber parâmetros e retornar o que você quiser (estado, funções, objetos).
+
+#### Hooks Customizados + Tipagem Genérica (TypeScript)
+
+Usar tipos genéricos (<T>) faz seus hooks customizados serem ainda mais poderosos:
+
+```tsx
+function useLocalStorage<T>(key: string, initialValue: T) {
+  const [storedValue, setStoredValue] = useState<T>(() => {
+    const item = localStorage.getItem(key);
+    return item ? JSON.parse(item) : initialValue;
+  });
+
+  const setValue = (value: T) => {
+    setStoredValue(value);
+    localStorage.setItem(key, JSON.stringify(value));
+  };
+
+  return [storedValue, setValue] as const;
+}
+```
+
+#### Pensamento estratégico
+
+Hooks customizados não precisam renderizar nada, eles só organizam a lógica.
+Você pode pensar neles como mini “serviços” internos do seu front-end React.
+
+Eles permitem:
+
+* Composição de comportamentos complexos.
+* Isolamento de lógica
+* Facilitação de testes.
+* Melhor legibilidade e manutenção.
