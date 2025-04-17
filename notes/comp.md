@@ -502,7 +502,7 @@ Desenvolvido pela Vercel, foca em performance ultra alta para aplicações JavaS
 
 > Depende do build de dependências (^build) antes de rodar o seu.
 
-#### Nx
+##### Nx
 
 Desenvolvido pela Nrwl (ex-Googlers que trabalharam no Angular).
 
