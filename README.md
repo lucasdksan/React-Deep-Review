@@ -144,6 +144,11 @@ Revisão de forma mais profunda sobre React
         * [Configurando um Monorepo na prática](/notes/comp.md#configurando-um-monorepo-na-prática)
         * [Decisões estratégicas](/notes/comp.md#decisões-estratégicas)
         * [Considerações Avançadas](/notes/comp.md#considerações-avançadas)
+* [Testes em React](/notes/testes.md#testes-em-react)
+    * [Principais ferramentas de teste em React](/notes/testes.md#principais-ferramentas-de-teste-em-react)
+    * [Setup típico de testes em projetos React](/notes/testes.md#setup-típico-de-testes-em-projetos-react)
+    * [Exemplo de Teste Unitário com React Testing Library](/notes/testes.md#exemplo-de-teste-unitário-com-react-testing-library)
+    * [Princípios do RTL (Testing Library)](/notes/testes.md#princípios-do-rtl-testing-library)
 * [Referências](#referências)
 
 ## Introdução
