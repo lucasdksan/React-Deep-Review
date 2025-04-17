@@ -119,6 +119,14 @@ Revisão de forma mais profunda sobre React
             * [role – Declarando a função do elemento](/notes/ui.md#role--declarando-a-função-do-elemento)
             * [aria-live – Feedback dinâmico](/notes/ui.md#aria-live--feedback-dinâmico)
             * [Boas práticas gerais no React](/notes/ui.md#boas-práticas-gerais-no-react)
+* [Componentização e Arquitetura](/notes/comp.md#componentização-e-arquitetura)
+    * [Padrões de componentes reutilizáveis](/notes/comp.md#padrões-de-componentes-reutilizáveis)
+        * [Princípios fundamentais](/notes/comp.md#princípios-fundamentais)
+        * [Estratégias Avançadas](/notes/comp.md#estratégias-avançadas)
+    * [Composição vs. Herança](/notes/comp.md#composição-vs-herança)
+        * [Por que o React prefere composição?](/notes/comp.md#por-que-o-react-prefere-composição)
+        * [Padrões de Composição no React](/notes/comp.md#padrões-de-composição-no-react)
+            * [O que é um Higher-Order Component (HOC)?](/notes/comp.md#o-que-é-um-higher-order-component-hoc)    
 * [Referências](#referências)
 
 ## Introdução
