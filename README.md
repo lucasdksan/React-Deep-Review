@@ -149,6 +149,9 @@ Revisão de forma mais profunda sobre React
     * [Setup típico de testes em projetos React](/notes/testes.md#setup-típico-de-testes-em-projetos-react)
     * [Exemplo de Teste Unitário com React Testing Library](/notes/testes.md#exemplo-de-teste-unitário-com-react-testing-library)
     * [Princípios do RTL (Testing Library)](/notes/testes.md#princípios-do-rtl-testing-library)
+    * [Testando Hooks Customizados](/notes/testes.md#testando-hooks-customizados)
+    * [Testes End-to-End (E2E)](/notes/testes.md#testes-end-to-end-e2e)
+    * [Boas práticas para testes em React](/notes/testes.md#boas-práticas-para-testes-em-react)
 * [Referências](#referências)
 
 ## Introdução

@@ -98,3 +98,55 @@ Ruim:
     container.querySelector('.btn')
 ```
 
+### Testando Hooks Customizados
+
+Hooks podem ser testados isoladamente usando o @testing-library/react-hooks ou o renderHook (já incluso no Testing Library React mais novo).
+
+```tsx
+import { renderHook, act } from '@testing-library/react';
+
+function useCounter() {
+  const [count, setCount] = useState(0);
+  const increment = () => setCount((c) => c + 1);
+  return { count, increment };
+}
+
+test('incrementa contador', () => {
+  const { result } = renderHook(() => useCounter());
+
+  act(() => {
+    result.current.increment();
+  });
+
+  expect(result.current.count).toBe(1);
+});
+```
+
+### Testes End-to-End (E2E)
+
+Para testar a aplicação de verdade no navegador:
+
+* Cypress → Ótimo para devs frontend, experiência muito boa.
+* Playwright → Mais robusto para testes multiplataforma.
+
+```js
+// cypress/e2e/form.cy.ts
+describe('Formulário', () => {
+  it('envia corretamente', () => {
+    cy.visit('/form');
+    cy.get('input[name="email"]').type('teste@exemplo.com');
+    cy.get('button[type="submit"]').click();
+    cy.contains('Obrigado pelo envio!').should('be.visible');
+  });
+});
+```
+
+### Boas práticas para testes em React
+
+Escreva testes pequenos e focados.
+
+* Nomeie bem seus testes (deve fazer X quando Y).
+* Mocks e fakes para APIs externas (usando msw, jest.fn(), etc).
+* Use CI/CD pipelines para rodar testes automaticamente (GitHub Actions, GitLab CI).
+* Cobertura de testes é importante, mas não absoluta — qualidade > quantidade.
+
