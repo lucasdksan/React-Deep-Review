@@ -15,11 +15,11 @@ Vamos abordar padrões, boas práticas e estratégias para criar componentes reu
 
 Exemplos típicos:
 
-* Botões (<Button />)
-* Inputs (<TextField />)
-* Modais (<Modal />)
-* Cards (<ProductCard />)
-* Avatares (<Avatar />)
+* Botões (```<Button />```)
+* Inputs (```<TextField />```)
+* Modais (```<Modal />```)
+* Cards (```<ProductCard />```)
+* Avatares (```<Avatar />```)
 
 #### Princípios fundamentais
 
@@ -438,3 +438,155 @@ Eles permitem:
 * Isolamento de lógica
 * Facilitação de testes.
 * Melhor legibilidade e manutenção.
+
+### Monorepos (Turborepo, Nx)
+
+Monorepo (Monolithic Repository) é uma estratégia onde vários projetos (apps, pacotes, bibliotecas) vivem no mesmo repositório Git.
+
+* Você mantém múltiplos pacotes em um único repositório, em vez de um repositório para cada projeto.
+* Cada app ou lib pode ser independente, mas compartilham o mesmo ambiente de build, CI/CD, versionamento, controle de dependências, etc.
+
+> Exemplo: Em vez de ter repositórios separados para frontend, backend, design system, você coloca tudo em um único repositório organizado.
+
+#### Benefícios de Monorepos
+
+| Vantagem | Descrição |
+| -------- | --------- |
+| Melhor compartilhamento de código | Fácil criar bibliotecas internas usadas por vários apps. |
+| Atomic commits | Atualiza múltiplos pacotes de uma vez só em um único commit. |
+| Integração contínua simplificada | Um pipeline de CI pode validar todos os projetos juntos. |
+| Consistência de dependências | Todos os projetos usam as mesmas versões de libs e ferramentas. |
+| Refatoração global | Alterações em larga escala (ex: mudar um componente usado em todos os apps). |
+
+#### Principais desafios de Monorepos
+
+* Performance: builds, testes e linting podem ficar lentos sem otimizações.
+* Gerenciamento de dependências: risco de "acoplamento" excessivo entre projetos.
+* Complexidade: precisa de ferramentas e processos mais robustos (como Turbo ou Nx).
+* Escalabilidade: mais fácil se tornar bagunçado se não houver boas práticas.
+
+#### Ferramentas para Monorepo Moderno
+
+##### Turborepo
+
+Desenvolvido pela Vercel, foca em performance ultra alta para aplicações JavaScript/TypeScript.
+
+**Características:**
+
+* Cache de build inteligente (local e remoto).
+* Parallel execution: tarefas rodam em paralelo.
+* Incremental builds: só re-executa tarefas de pacotes que mudaram.
+* Zero-config para projetos TypeScript, Next.js, React, etc.
+* Integração automática com Vercel para deploy contínuo.
+
+**Como funciona:**
+
+* Arquivo turbo.json define pipelines de tarefas (build, lint, test, etc.).
+* Detecta dependências entre pacotes.
+* Usa cache local (.turbo) e remoto (se configurado).
+
+```tsx
+{
+  "pipeline": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**"]
+    },
+    "lint": {},
+    "test": {
+      "dependsOn": ["build"]
+    }
+  }
+}
+```
+
+> Depende do build de dependências (^build) antes de rodar o seu.
+
+#### Nx
+
+Desenvolvido pela Nrwl (ex-Googlers que trabalharam no Angular).
+
+**Características:**
+
+* Workspaces organizados por apps e libs.
+* Generators: cria apps, libs, componentes, serviços automaticamente.
+* Executors: comandos inteligentes para build, lint, test, serve.
+* Dependência gráfica: visualiza a árvore de dependências dos projetos (nx graph).
+* Task caching avançado, como o Turbo, local e remoto.
+* Plugins oficiais para React, Next.js, NestJS, Angular, etc.
+* Controlled boundaries: regras para dependências entre libs/apps (Lint Rules).
+
+**Como funciona:**
+
+* Arquivo nx.json + project.json ou workspace.json.
+* Estrutura separada em apps/ e libs/.
+* Cada app/lib tem configurações isoladas.
+* Pode usar o nx affected para rodar somente o que foi impactado por uma mudança no Git.
+
+```bash
+nx build frontend
+nx test backend
+nx affected:build --base=main
+```
+
+>Ex: affected:build só faz build dos pacotes impactados em comparação com main.
+
+#### Estrutura típica de um Monorepo moderno (Turbo ou Nx)
+
+```bash
+/my-monorepo
+  /apps
+    /web
+    /admin
+    /api
+  /packages
+    /ui
+    /config
+    /hooks
+    /utils
+  turbo.json / nx.json
+  package.json
+  tsconfig.base.json
+```
+
+* /apps → Projetos finais (Next.js, Node.js, etc.)
+* /packages → Bibliotecas compartilhadas.
+* turbo.json ou nx.json → Configurações do gerenciador de tarefas.
+
+#### Configurando um Monorepo na prática
+
+Com Turborepo:
+
+```bash
+npx create-turbo@latest
+```
+
+Com Nx:
+
+```bash
+npx create-nx-workspace@latest
+```
+
+* Escolhe entre monorepo de apps (multi-app) ou packages (multi-library).
+* Depois cria novos apps/libs com:
+
+```bash
+nx generate @nrwl/next:app frontend
+nx generate @nrwl/react:lib ui-components
+```
+
+#### Decisões estratégicas
+
+| Caso | Melhor escolha |
+| ---- | -------------- |
+| Preciso de máxima simplicidade e projeto focado em React / Next.js | Turborepo |
+| Quero escala corporativa com muitos apps/libs/serviços e regras de dependência | Nx |
+| Preciso de plugins para outras stacks (NestJS, Angular, etc) | Nx |
+| Meu foco é desempenho em builds locais e CI/CD | Ambos são excelentes (Turbo um pouco mais minimalista) |
+
+#### Considerações Avançadas
+
+* Em projetos grandes, combine monorepo com Workspaces do Yarn, PNPM ou NPM para gerenciar pacotes internos (workspaces no package.json).
+* Cache remoto (com Turborepo ou Nx) acelera muito CI/CD: só o que mudou é rebuildado.
+* CI inteligente: configurar pipelines para rodar apenas tasks dos apps/libs impactados (nx affected, turbo run).
+* Boundary Rules (com Nx) evitam "dependência circular" entre libs/apps.
