@@ -150,3 +150,224 @@ Escreva testes pequenos e focados.
 * Use CI/CD pipelines para rodar testes automaticamente (GitHub Actions, GitLab CI).
 * Cobertura de testes é importante, mas não absoluta — qualidade > quantidade.
 
+### Testes unitários com Jest e Testing Library
+
+**O que são testes unitários no React?**
+
+Testes unitários validam o comportamento de uma unidade de código isolada, como:
+
+* Um componente React
+* Uma função utilitária
+* Um hook customizado
+
+Eles são rápidos e ajudam a garantir que cada peça do sistema funcione como esperado.
+
+**Ferramentas principais**
+
+* **Jest**: Framework de testes (test runner, assertions, mocking)
+* **React Testing Library (RTL)**: Foca em testar o que o usuário vê e interage, não a implementação.
+
+```bash
+npm i -D jest @testing-library/react @testing-library/jest-dom @testing-library/user-event
+```
+
+> Se estiver usando o Vite, prefira o Vitest, um substituto mais rápido e moderno para o Jest.
+
+#### Estrutura básica de um teste
+
+```tsx
+// src/components/Hello.tsx
+
+type HelloProps = { name: string; };
+
+export function Hello({ name }: HelloProps) {
+  return <h1>Olá, {name}</h1>
+}
+```
+
+```tsx
+// src/components/__tests__/Hello.test.tsx
+import { render, screen } from "@testing-library/react";
+import { Hello } from "../Hello.tsx";
+
+test("Renderiza o nome corretamente", ()=>{
+  render(<Hello name="Lucas" />);
+  expect(screen.getByText("Olá, Lucas")).toBeInTheDocument();
+});
+```
+
+#### Testando eventos
+
+```tsx
+// src/components/Button.tsx
+
+type ButtonProps = { onClick: ()=>void; };
+
+export function Button({ onClick }: ButtonProps) {
+  return <button onClick={onClick}>Clique</button>
+}
+```
+
+```tsx
+// src/components/__tests__/Button.test.tsx
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { Button } from "../Button.tsx";
+
+test("Renderiza o componente corretamente", async ()=>{
+  const handleClick = jest.fn();
+  render(<Button onClick={handleClick} />);
+  await userEvent.click(screen.getByText("Clique"));
+  expect(handleClick).toHaveBeenCalledTimes(1);
+});
+```
+
+#### Testando componentes com estado (useState)
+
+```tsx
+// src/components/Counter.tsx
+
+import { useState } from "react";
+
+export function Counter(){
+  const [count, setCount] = useState(1);
+
+  return(
+    <>
+      <p>Contador: {count}</p>
+      <button onClick={()=> setCount((prev) => prev + 1)}>Add</button>
+    </>
+  );
+}
+```
+
+```tsx
+// src/components/__tests__/Counter.test.tsx
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { Counter } from "../Counter.tsx";
+
+test("Incrementar corretamente", async () => {  
+  render(<Counter />);
+  const btn = screen.getByRole("button", { name: "/add/i" });
+  await userEvent.click(btn);
+  expect(screen.getByText("/contador: 1/i")).toBeInTheDocument();
+});
+```
+
+#### Boas práticas
+
+* Sempre teste do ponto de vista do usuário (textos visíveis, rótulos, etc.)
+* Use screen.getByText, getByRole, getByLabelText, etc - Evite querySelector ou className
+* Separe testes por responsabilidade e evite muitos asserts em um único teste
+* Use jest.fn() para mockar funções e validar chamadas
+
+### Testes de integração (Mocking de API)
+
+Testes de integração com mocking de API no React são essenciais para garantir que seus componentes interajam corretamente com serviços externos, como APIs REST ou GraphQL, sem realmente fazer chamadas reais durante os testes. Isso torna os testes mais rápidos, estáveis e isolados.
+
+#### O que são testes de integração?
+
+Testes de integração verificam a interação entre múltiplas partes do sistema. No contexto de React:
+
+* Um componente + hook + API.
+* Componente que depende de fetch ou axios.
+* Componente que usa useEffect para buscar dados.
+
+#### Como simular chamadas de API?
+
+A melhor abordagem moderna é usar o Mock Service Worker (MSW). Ele intercepta chamadas reais de fetch ou axios, sem precisar alterar seu código.
+
+* jest.mock("axios")
+* msw
+
+```bash
+npm i -D msw
+```
+
+```ts
+// src/mocks/handlers.ts
+
+import { rest } from "msw";
+
+export const handlers = [
+  rest.get("/api/users", (req, res, ctx) => {
+    return res(
+      ctx.status(200),
+      ctx.json([ { id: 1, name: "Lucas" } ])
+    );
+  }),
+];
+```
+
+```ts
+// src/mocks/server.ts
+
+import { setupServer } from "msw/node";
+import { handlers } from "./handlers";
+
+export const server = setupServer(...handlers);
+```
+
+```ts
+// src/setupTests.ts
+
+import { server } from "./mocks/server";
+import "@testing-library/jest-dom";
+
+beforeAll(() => server.listen());
+afterEach(() => server.resetHandlers());
+afterAll(() => server.close());
+```
+
+Garanta que setupFilesAfterEnv em jest.config.js esteja apontando para esse arquivo.
+
+#### Componente a ser testado
+
+```tsx
+// src/components/UserList.tsx
+import { useEffect, useState } from 'react';
+
+export function UserList() {
+  const [users, setUsers] = useState<{ id: number; name: string }[]>([]);
+
+  useEffect(() => {
+    fetch('/api/users')
+      .then((res) => res.json())
+      .then(setUsers);
+  }, []);
+
+  return (
+    <ul>
+      {users.map((user) => (
+        <li key={user.id}>{user.name}</li>
+      ))}
+    </ul>
+  );
+}
+```
+
+#### Teste de integração
+
+```tsx
+// src/components/__tests__/UserList.test.tsx
+import { render, screen } from '@testing-library/react';
+import { UserList } from '../UserList';
+
+test('renderiza usuários vindos da API mockada', async () => {
+  render(<UserList />);
+  expect(await screen.findByText('João')).toBeInTheDocument();
+  expect(await screen.findByText('Maria')).toBeInTheDocument();
+});
+```
+
+* A API foi mockada com MSW.
+* O fetch continua funcionando como em produção.
+* O teste verifica a integração entre o componente e a API mockada.
+
+#### Benefícios do MSW
+
+* Simula erros de rede facilmente.
+* Mantém seu código inalterado.
+* Permite simular latência, status 500, timeouts.
+* Funciona para testes e2e também (Cypress, Playwright).

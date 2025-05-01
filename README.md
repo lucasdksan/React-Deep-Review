@@ -152,6 +152,13 @@ Revisão de forma mais profunda sobre React
     * [Testando Hooks Customizados](/notes/testes.md#testando-hooks-customizados)
     * [Testes End-to-End (E2E)](/notes/testes.md#testes-end-to-end-e2e)
     * [Boas práticas para testes em React](/notes/testes.md#boas-práticas-para-testes-em-react)
+    * [Testes unitários com Jest e Testing Library](/notes/testes.md#testes-unitários-com-jest-e-testing-library)
+        * [Estrutura básica de um teste](/notes/testes.md#estrutura-básica-de-um-teste)
+        * [Testando eventos](/notes/testes.md#testando-eventos)
+        * [Testando componentes com estado (useState)](/notes/testes.md#testando-componentes-com-estado-usestate)
+        * [Boas práticas](/notes/testes.md#boas-práticas)
+    * [Testes de integração (Mocking de API)](/notes/testes.md#testes-de-integração-mocking-de-api)
+        * []()
 * [Referências](#referências)
 
 ## Introdução
