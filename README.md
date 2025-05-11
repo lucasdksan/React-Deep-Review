@@ -164,6 +164,18 @@ Revisão de forma mais profunda sobre React
         * [Teste de integração](/notes/testes.md#teste-de-integração)
         * [Benefícios do MSW](/notes/testes.md#benefícios-do-msw)
 * [ESLint, Prettier e editorConfig](/notes/tools.md#eslint-prettier-e-editorconfig)
+    * [ESLint – Linter de código JavaScript/TypeScript](/notes/tools.md#eslint--linter-de-código-javascripttypescript)
+    * [Prettier – Formatador de código automático](/notes/tools.md#prettier--formatador-de-código-automático)
+    * [EditorConfig – Padroniza editores de texto](/notes/tools.md#editorconfig--padroniza-editores-de-texto)
+    * [eslint.config.js](/notes/tools.md#eslintconfigjs)
+    * [Boas práticas com essas ferramentas](/notes/tools.md#boas-práticas-com-essas-ferramentas)
+* [Github Actions para CI/CD](/notes/cicd.md#github-actions-para-cicd)
+    * [O que é CI/CD?](/notes/cicd.md#o-que-é-cicd)
+    * [Pipeline CI/CD](/notes/cicd.md#pipeline-cicd)
+    * [Benefícios em projetos React](/notes/cicd.md#benefícios-em-projetos-react)
+    * [GitHub Actions: visão geral](/notes/cicd.md#github-actions-visão-geral)
+    * [](/notes/cicd.md#)
+    * [](/notes/cicd.md#)
 * [Referências](#referências)
 
 ## Introdução
