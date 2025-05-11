@@ -174,8 +174,6 @@ Revisão de forma mais profunda sobre React
     * [Pipeline CI/CD](/notes/cicd.md#pipeline-cicd)
     * [Benefícios em projetos React](/notes/cicd.md#benefícios-em-projetos-react)
     * [GitHub Actions: visão geral](/notes/cicd.md#github-actions-visão-geral)
-    * [](/notes/cicd.md#)
-    * [](/notes/cicd.md#)
 * [Referências](#referências)
 
 ## Introdução
