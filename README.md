@@ -163,6 +163,7 @@ Revisão de forma mais profunda sobre React
         * [Componente a ser testado](/notes/testes.md#componente-a-ser-testado)
         * [Teste de integração](/notes/testes.md#teste-de-integração)
         * [Benefícios do MSW](/notes/testes.md#benefícios-do-msw)
+* [ESLint, Prettier e editorConfig](/notes/tools.md#eslint-prettier-e-editorconfig)
 * [Referências](#referências)
 
 ## Introdução
