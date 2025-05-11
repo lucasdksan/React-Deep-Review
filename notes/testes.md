@@ -371,3 +371,83 @@ test('renderiza usuários vindos da API mockada', async () => {
 * Mantém seu código inalterado.
 * Permite simular latência, status 500, timeouts.
 * Funciona para testes e2e também (Cypress, Playwright).
+
+### Cobertura de testes e boas práticas
+
+Cobertura de testes é uma métrica que indica quanto do seu código foi executado durante a execução dos testes. 
+
+#### O que é cobertura de testes?
+
+A cobertura pode ser medida de diferentes formas:
+
+* **Cobertura de linhas**: Quantas linhas do código foram executadas nos testes.
+* **Cobertura de branches**: Cobertura de todas as condições.
+* **Cobertura de funções**: Quais funções foram chamadas.
+* **Cobertura de statements**: Quantas instruções foram executadas.
+
+#### Como gerar cobertura no Jest
+
+
+```bash
+npm test -- --coverage
+```
+
+e no package.json
+
+```json
+"scripts": {
+  "test:coverage": "jest --coverage"
+}
+```
+
+#### Boas práticas de cobertura
+
+* **Não persiga 100% cegamente**
+
+  * Ter 100% de cobertura não significa que os testes estão bons.
+  * Prefira testes que validam casos reais e falhas comuns, mesmo que a cobertura seja "só" 80-90%.
+
+* **Teste o comportamento, não a implementação**
+
+Evitar testar "como" algo funcional, e foque no "o que" ele deve dazer:
+
+* X Teste frágil:
+
+```ts
+expect(component.state).toEqual({ loading: true });
+```
+
+* V Teste robusto:
+
+```ts
+expect(screen.getByText(/carregando/i).toBeInTheDocument());
+```
+
+* **Mantenha cobertura mínima com o Jest**
+
+No jest.config.ts:
+
+```ts
+coverageThreshould: {
+  global: {
+    branches: 80,
+    functions: 85,
+    lines: 90,
+    statements: 90,
+  }
+}
+```
+
+* **Evite cobrir código morto**
+
+Não escreva testes só para aumentar cobertura de código que nem está sendo usado ou não tem valor de negócio
+
+* **Use ferramentas de relatório visual**
+
+* jest --coverage já gera um relatório HTML
+* Acesse:
+
+```bash
+coverage/lcov-report/index.html
+```
+

@@ -158,7 +158,11 @@ Revisão de forma mais profunda sobre React
         * [Testando componentes com estado (useState)](/notes/testes.md#testando-componentes-com-estado-usestate)
         * [Boas práticas](/notes/testes.md#boas-práticas)
     * [Testes de integração (Mocking de API)](/notes/testes.md#testes-de-integração-mocking-de-api)
-        * []()
+        * [O que são testes de integração?](/notes/testes.md#o-que-são-testes-de-integração)
+        * [Como simular chamadas de API?](/notes/testes.md#como-simular-chamadas-de-api)
+        * [Componente a ser testado](/notes/testes.md#componente-a-ser-testado)
+        * [Teste de integração](/notes/testes.md#teste-de-integração)
+        * [Benefícios do MSW](/notes/testes.md#benefícios-do-msw)
 * [Referências](#referências)
 
 ## Introdução
